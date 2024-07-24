@@ -18,6 +18,8 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.10.3",
     "reflect-metadata": "^0.2.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20",
     "yup": "^1.4.0"
   },
