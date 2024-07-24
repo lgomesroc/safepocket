@@ -23,11 +23,16 @@ export default function Login() {
   const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
     try {
       const response = await axios.post("/api/login", data);
-      // Handle successful login (e.g., save token, redirect)
-      router.push("/dashboard");
+      if (response.status === 200) {
+        // Sucesso no login, redirecionar para o dashboard
+        router.push("/dashboard");
+      } else {
+        // Lidar com erros de login
+        console.error("Erro no login:", response.statusText);
+      }
     } catch (error) {
-      // Handle login error
-      console.error("Login failed:", error);
+      // Lidar com erros de requisição
+      console.error("Falha no login:", error);
     }
   };
 
