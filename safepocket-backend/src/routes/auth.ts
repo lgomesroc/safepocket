@@ -1,50 +1,20 @@
-import { Router } from "express";
-import { getRepository } from "typeorm";
-import { User } from "../entities/User";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { Request, Response } from 'express';
+import { getRepository } from 'typeorm';
+import { User } from '../entities/User';
 
-const authRouter = Router();
-
-// Registro de usuário
-authRouter.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
-  
-  try {
+export class AuthController {
+  async getUserByEmail(req: Request, res: Response): Promise<Response> {
     const userRepository = getRepository(User);
-    const existingUser = await userRepository.findOne({ email });
-    
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already in use" });
-    }
-    
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = userRepository.create({ name, email, password: hashedPassword });
-    await userRepository.save(user);
-    
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Error registering user", error });
-  }
-});
+    const { email } = req.body;
 
-// Login de usuário
-authRouter.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  
-  try {
-    const userRepository = getRepository(User);
-    const user = await userRepository.findOne({ email });
-    
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(400).json({ message: "Invalid email or password" });
+    try {
+      const user = await userRepository.findOneBy({ email });
+      if (!user) {
+        return res.status(404).json({ message: 'Usuário não encontrado' });
+      }
+      return res.status(200).json(user);
+    } catch (error) {
+      return res.status(500).json({ message: 'Erro ao obter o usuário', error });
     }
-    
-    const token = jwt.sign({ id: user.id }, "your_jwt_secret", { expiresIn: "1h" });
-    res.json({ token });
-  } catch (error) {
-    res.status(500).json({ message: "Error logging in", error });
   }
-});
-
-export { authRouter };
+}

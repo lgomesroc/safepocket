@@ -4,14 +4,14 @@ import { User } from "./User";
 @Entity()
 export class Expense {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  description: string;
+  description?: string;
 
   @Column("decimal", { precision: 10, scale: 2 })
-  amount: number;
+  amount: number = 0;
 
   @ManyToOne(() => User, (user) => user.expenses)
-  user: User;
+  user!: User;
 }

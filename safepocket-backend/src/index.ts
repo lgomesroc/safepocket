@@ -1,16 +1,21 @@
 import "reflect-metadata";
-import { createConnection } from "typeorm";
 import express from "express";
+import { createConnection } from "typeorm";
 import routes from "./routes";
+import cors from "cors";
 
-createConnection().then(async connection => {
-  const app = express();
-  app.use(express.json());
+const app = express();
 
-  // Registrar as rotas
-  app.use("/api", routes);
+// Middleware
+app.use(cors());
+app.use(express.json());
 
+// Rotas
+app.use("/api", routes);
+
+// Inicialização do servidor
+createConnection().then(() => {
   app.listen(3000, () => {
-    console.log("Server started on http://localhost:3000");
+    console.log("Servidor rodando na porta 3000");
   });
 }).catch(error => console.log(error));

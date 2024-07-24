@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const FinanceController_1 = require("../controllers/FinanceController");
+const financeRoutes = (0, express_1.Router)();
+const financeController = new FinanceController_1.FinanceController();
+financeRoutes.post("/", financeController.create);
+financeRoutes.get("/", financeController.getAll);
+financeRoutes.get("/:id", financeController.getById);
+financeRoutes.put("/:id", financeController.update);
+financeRoutes.delete("/:id", financeController.delete);
+exports.default = financeRoutes;

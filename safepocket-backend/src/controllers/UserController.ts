@@ -1,39 +1,57 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
-import { User } from "../entities/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { User } from "../models/User";
 
 class UserController {
   async register(req: Request, res: Response) {
     const userRepository = getRepository(User);
-    const { name, email, password, photo } = req.body;
+    const { email, password } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const userExists = await userRepository.findOne({ where: { email } });
 
-    const user = userRepository.create({ name, email, password: hashedPassword, photo });
+    if (userExists) {
+      return res.sendStatus(409);
+    }
+
+    const user = userRepository.create({
+      email,
+      password: await bcrypt.hash(password, 8)
+    });
+
     await userRepository.save(user);
 
-    return res.status(201).json(user);
+    const token = jwt.sign({ id: user.id }, "secret", { expiresIn: "1d" });
+
+    return res.json({
+      user,
+      token
+    });
   }
 
-  async login(req: Request, res: Response) {
+  async authenticate(req: Request, res: Response) {
     const userRepository = getRepository(User);
     const { email, password } = req.body;
 
-    const user = await userRepository.findOne({ email });
+    const user = await userRepository.findOne({ where: { email } });
+
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.sendStatus(401);
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
+
     if (!isValidPassword) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.sendStatus(401);
     }
 
-    const token = jwt.sign({ id: user.id }, "your_jwt_secret", { expiresIn: "1h" });
+    const token = jwt.sign({ id: user.id }, "secret", { expiresIn: "1d" });
 
-    return res.json({ user, token });
+    return res.json({
+      user,
+      token
+    });
   }
 }
 

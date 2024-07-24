@@ -1,18 +1,10 @@
-import express from "express";
-import { createConnection } from "typeorm";
-import { authRouter } from "./routes/auth";
+import { Router } from "express";
+import userRoutes from "./userRoutes";
+import financeRoutes from "./financeRoutes";
 
-const app = express();
-const PORT = 3000;
+const routes = Router();
 
-app.use(express.json());
+routes.use("/users", userRoutes);
+routes.use("/finances", financeRoutes);
 
-createConnection().then(() => {
-  console.log("Connected to the database");
-
-  app.use("/api", authRouter);
-
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}).catch((error) => console.log("Error connecting to the database", error));
+export default routes;

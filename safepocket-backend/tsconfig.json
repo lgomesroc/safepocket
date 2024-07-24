@@ -5,7 +5,9 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "experimentalDecorators": true,  // Adicione esta linha
+    "emitDecoratorMetadata": true    // Adicione esta linha
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
