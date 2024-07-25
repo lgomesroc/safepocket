@@ -5,14 +5,15 @@ import { User } from '../entities/User';
 
 // Função de registro de usuário
 export const register = async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
+  const { name, email, password, photo } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      username,
+    const user = User.create({
+      name,
       email,
       password: hashedPassword,
+      photo,
     });
     await user.save();
     res.status(201).json({ message: 'User registered successfully!' });

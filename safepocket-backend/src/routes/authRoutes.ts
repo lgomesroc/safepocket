@@ -1,7 +1,7 @@
-// src/routes/authRoutes.ts
-
 import { Router } from 'express';
-import { register, login } from '../controllers/authController';
+import { authController } from '../controllers/authController';
+
+const router = Router();
 
 /**
  * @openapi
@@ -29,9 +29,7 @@ import { register, login } from '../controllers/authController';
  *       400:
  *         description: Requisição inválida
  */
-const router = Router();
-
-router.post('/register', register);
+router.post('/register', authController.register);
 
 /**
  * @openapi
@@ -57,6 +55,6 @@ router.post('/register', register);
  *       401:
  *         description: Credenciais inválidas
  */
-router.post('/login', login);
+router.post('/login', authController.login);
 
 export default router;

@@ -14,7 +14,7 @@ const typeorm_1 = require("typeorm");
 const Expense_1 = require("./Expense");
 const Income_1 = require("./Income");
 const Transaction_1 = require("./Transaction");
-let User = class User {
+let User = class User extends typeorm_1.BaseEntity {
 };
 exports.User = User;
 __decorate([

@@ -12,11 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Transaction = void 0;
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
+// Definindo o modelo Transaction com campos description, amount, e type
 let Transaction = class Transaction {
-    constructor(id, description, amount, user) {
+    constructor(id, description, amount, type, user) {
         this.id = id || 0;
         this.description = description || '';
         this.amount = amount || 0;
+        this.type = type || ''; // Inicializando o campo type
         this.user = user || null;
     }
 };
@@ -30,14 +32,20 @@ __decorate([
     __metadata("design:type", String)
 ], Transaction.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)("decimal", { precision: 10, scale: 2 }) // Ajuste o tipo de coluna para decimal com precisão e escala
+    ,
     __metadata("design:type", Number)
 ], Transaction.prototype, "amount", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => User_1.User, user => user.transactions),
+    (0, typeorm_1.Column)({ type: "varchar", length: 50 }) // Adicionando o campo type
+    ,
+    __metadata("design:type", String)
+], Transaction.prototype, "type", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => User_1.User, user => user.transactions, { nullable: true }),
     __metadata("design:type", Object)
 ], Transaction.prototype, "user", void 0);
 exports.Transaction = Transaction = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, Number, User_1.User])
+    __metadata("design:paramtypes", [Number, String, Number, String, User_1.User])
 ], Transaction);

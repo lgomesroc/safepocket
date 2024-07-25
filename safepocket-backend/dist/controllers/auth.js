@@ -18,13 +18,14 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const User_1 = require("../entities/User");
 // Função de registro de usuário
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username, email, password } = req.body;
+    const { name, email, password, photo } = req.body;
     try {
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
-        const user = yield User_1.User.create({
-            username,
+        const user = User_1.User.create({
+            name,
             email,
             password: hashedPassword,
+            photo,
         });
         yield user.save();
         res.status(201).json({ message: 'User registered successfully!' });
