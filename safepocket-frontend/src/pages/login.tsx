@@ -3,65 +3,79 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { TextField, Button, Typography, Container, Box } from '@mui/material';
+import { useState } from 'react'; // Adicionado import para useState
 
-interface ILoginForm {
-  email: string;
-  password: string;
-}
-
+// Definindo o esquema de validação com Yup
 const schema = yup.object({
   email: yup.string().email("Invalid email format").required("Email is required"),
   password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required")
 }).required();
 
+// Interface para os dados do formulário de login
+interface ILoginForm {
+  email: string;
+  password: string;
+}
+
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm<ILoginForm>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
   });
   const router = useRouter();
+  const [serverError, setServerError] = useState<string | null>(null);
 
+  // Função para lidar com o envio do formulário
   const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
     try {
-      const response = await axios.post("/api/login", data);
+      const response = await axios.post("/api/auth/login", data);
       if (response.status === 200) {
         // Sucesso no login, redirecionar para o dashboard
         router.push("/dashboard");
       } else {
         // Lidar com erros de login
         console.error("Erro no login:", response.statusText);
+        setServerError("Invalid email or password.");
       }
     } catch (error) {
       // Lidar com erros de requisição
       console.error("Falha no login:", error);
+      setServerError("An error occurred during login.");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
-        <div className="mb-4">
-          <label className="block mb-1" htmlFor="email">Email</label>
-          <input
+    <Container maxWidth="xs">
+      <Box my={4}>
+        <Typography variant="h5" gutterBottom>
+          Login
+        </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <TextField
+            label="Email"
+            variant="outlined"
+            fullWidth
+            margin="normal"
             {...register("email")}
-            className="w-full p-2 border border-gray-300 rounded"
-            type="email"
-            id="email"
+            error={!!errors.email}
+            helperText={errors.email?.message}
           />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-        </div>
-        <div className="mb-4">
-          <label className="block mb-1" htmlFor="password">Password</label>
-          <input
-            {...register("password")}
-            className="w-full p-2 border border-gray-300 rounded"
+          <TextField
+            label="Password"
+            variant="outlined"
             type="password"
-            id="password"
+            fullWidth
+            margin="normal"
+            {...register("password")}
+            error={!!errors.password}
+            helperText={errors.password?.message}
           />
-          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
-        </div>
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Login</button>
-      </form>
-    </div>
+          {serverError && <Typography color="error">{serverError}</Typography>}
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Login
+          </Button>
+        </form>
+      </Box>
+    </Container>
   );
 }

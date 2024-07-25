@@ -1,5 +1,3 @@
-// src/config/swagger.ts
-
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
@@ -25,7 +23,4 @@ const options = {
 
 const swaggerSpec = swaggerJSDoc(options);
 
-export default {
-  swaggerUi,
-  swaggerSpec,
-};
+export { swaggerUi, swaggerSpec };

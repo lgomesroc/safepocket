@@ -20,3 +20,11 @@ app.use("/api", routes_1.default);
         console.log("Servidor rodando na porta 3000");
     });
 }).catch(error => console.log(error));
+// Configuração do TypeORM
+(0, typeorm_1.createConnection)().then(() => {
+    console.log("Conectado ao banco de dados");
+    app.use("/api/transactions", transactionRoutes);
+    app.listen(3000, () => {
+        console.log("Servidor rodando na porta 3000");
+    });
+}).catch(error => console.log("Erro ao conectar ao banco de dados: ", error));
