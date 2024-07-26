@@ -10,7 +10,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: 'http://localhost:3000/api',
+      url: 'http://localhost:3001/api',
       description: 'Servidor local',
     },
   ],
@@ -18,7 +18,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ['./src/routes/*.ts'], // Path para os arquivos de rotas onde as anotações estão localizadas
+  apis: ['./src/routes/*.ts'], // Caminho para os arquivos de rotas onde as anotações OpenAPI estão localizadas
 };
 
 const swaggerSpec = swaggerJSDoc(options);
