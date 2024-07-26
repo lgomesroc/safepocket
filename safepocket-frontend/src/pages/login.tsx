@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { TextField, Button, Typography, Container, Box } from '@mui/material';
-import { useState } from 'react'; // Adicionado import para useState
+import { useState } from 'react';
 
 // Definindo o esquema de validação com Yup
 const schema = yup.object({

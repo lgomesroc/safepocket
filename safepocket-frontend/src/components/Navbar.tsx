@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const Navbar: React.FC = () => {
   return (
     <nav>
-      <Link to="/">Home</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/dashboard">Dashboard</Link>
+      <Link href="/">Home</Link>
+      <Link href="/login">Login</Link>
+      <Link href="/dashboard">Dashboard</Link>
     </nav>
   );
 };
